@@ -10,7 +10,8 @@
 
 # You should also include columns for any additional categorical information you have about your data (for example, tone or phonemic length)
 
-data <- read.csv("voweldata.csv", header=T, encoding = "UTF-8")
+#data <- read.csv("voweldata.csv", header=T, encoding = "UTF-8")
+data <- read.csv("pseudo_vowel_data.csv")
 
 # Check that all vowel symbols were read in correctly
 unique(data$vowel)
@@ -18,6 +19,7 @@ unique(data$vowel)
 # Use regular expressions and gsub() to correct any mis-read values
 data$vowel <- gsub("?", "ɨ", data$vowel, fixed=TRUE) # fixed=TRUE means that characters should be interpreted literally, not using regex interpretations
 data$vowel <- gsub("<U+0259>", "ə", data$vowel, fixed=TRUE)
+data$vowel <- gsub("schwa", "ə", data$vowel, fixed=TRUE)
 
 # Make sure that the vowel column acts as a factor, not as character strings (do the same for any other categorical variables in your data set)
 data$vowel <- as.factor(data$vowel)

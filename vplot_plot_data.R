@@ -13,67 +13,57 @@ require(reshape2)
 ggplot(data=data)
 
 # We also need to tell it what factors it should pay attention to
-ggplot(data=data, aes(x=f2_50, y=f1_50, label=vowel))
+ggplot(data=data, aes(x=F2, y=F1, label=vowel))
 
 # If you run that code, you get a plot, but no data appears
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
+ggplot(data=data, aes(x=F2, y=F1)) +
   geom_point()
 
 # Now we have data, but no information about what vowels it's from
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
+ggplot(data=data, aes(x=F2, y=F1)) +
   geom_point(aes(color=vowel))
 
 # Something doesn't look quite right - /u/ is in the bottom left, but if we want a traditional vowel plot, it should be in the top right
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
-  geom_point(aes(color=vowel)) +
-  scale_x_reverse() +
-  scale_y_reverse()
-
-# Now our data looks like it's in the right place (we've reversed the x and y axes). If we want the axis labels to be on the top and right, we just have to add position modifiers to the scale_ commands.
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
-  geom_point(aes(color=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right")
+# ggplot(data=data, aes(x=F2, y=F1)) +
+#   geom_point(aes(color=vowel)) +
+#   scale_x_reverse() +
+#   scale_y_reverse()
+# 
+# # Now our data looks like it's in the right place (we've reversed the x and y axes). If we want the axis labels to be on the top and right, we just have to add position modifiers to the scale_ commands.
+# ggplot(data=data, aes(x=F2, y=F1)) +
+#   geom_point(aes(color=vowel)) +
+#   scale_x_reverse(position = "top") +
+#   scale_y_reverse(position = "right")
 
 # We can also indicate vowel identity using shape instead of color.
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
-  geom_point(aes(shape=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right")
+ggplot(data=data, aes(x=F2, y=F1)) +
+  geom_point(aes(shape=vowel))
 
 # We can also plot the vowel symbols, using geom_text() instead of geom_point()
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
-  geom_text(aes(label=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right")
+ggplot(data=data, aes(x=F2, y=F1)) +
+  geom_text(aes(label=vowel))
 
 # You can combine geom_text() and color
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
-  geom_text(aes(label=vowel, color=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right")
+ggplot(data=data, aes(x=F2, y=F1)) +
+  geom_text(aes(label=vowel, color=vowel))
 
 # You may want to include both raw and summarized data. To summarize your data, you can use the reshape2 packages (for pipes %>%) and dplyr
 # This command produces a new dataframe (actually a tibble, don't worry about that) with one value for combination of vowel and v_length
 # It summarizes across speakers and across any other variables that aren't included in the group_by() command
 # Here, I only calculate means, but you can make many other summary calculations if desired.
 data.means <- data %>%
-  group_by(vowel, v_length) %>%
-  summarise(f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50))
+  group_by(vowel) %>%
+  summarise(F1 = mean(F1),
+            F2 = mean(F2))
 
 # Once you have that summarized, data you can add it to the plot containing the unsummarized data
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
+ggplot(data=data, aes(x=F2, y=F1)) +
   geom_text(aes(label=vowel, color=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right") +
   geom_text(data=data.means, aes(label=vowel), size=12)
 
 # You can vary the transparency of layers of data by setting alpha to a value between 0 and 1. The smaller alpha is, the more transparent the result.
-ggplot(data=data, aes(x=f2_50, y=f1_50)) +
+ggplot(data=data, aes(x=F2, y=F1)) +
   geom_text(aes(label=vowel, color=vowel)) +
-  scale_x_reverse(position = "top") +
-  scale_y_reverse(position = "right") +
   geom_text(data=data.means, alpha=0.5, aes(label=vowel), size=12)
 
 # Here are some other useful ggplot commands.
@@ -109,8 +99,8 @@ data.summary <- data %>%
             f2_norm = mean(f2_norm),
             duration = mean(duration),
             f0_50 = mean(f0_50),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50),
+            F1 = mean(F1),
+            F2 = mean(F2),
             f3_50 = mean(f3_50))
 
 # Summarize data by calculating mean values for each vowel (across speakers) at each level of the 'v_length' variable
@@ -120,8 +110,8 @@ data.means <- data %>%
             f2_norm = mean(f2_norm),
             duration = mean(duration),
             f0_50 = mean(f0_50),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50),
+            F1 = mean(F1),
+            F2 = mean(F2),
             f3_50 = mean(f3_50))
 
 
@@ -151,7 +141,7 @@ ggplot(data=data.summary, aes(x=f2_norm, y=f1_norm, label=vowel)) +
   scale_y_reverse(position = "right")
 
 # plot with one dot per subject per vowel - non-normalized data
-ggplot(data=data.summary, aes(x=f2_50, y=f1_50, label=vowel)) +
+ggplot(data=data.summary, aes(x=F2, y=F1, label=vowel)) +
   geom_point(alpha=0.25, aes(color=vowel, shape=subject), size=10, show.legend=FALSE) + 
   facet_wrap(.~subject)
   geom_text(data=data.means, size=10, show.legend=FALSE) +
@@ -176,16 +166,16 @@ ws.fp.2 <- ws.fp %>%
   summarize(f1_norm = mean(f1_norm),
             f2_norm = mean(f2_norm),
             duration = mean(duration),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50))
+            F1 = mean(F1),
+            F2 = mean(F2))
 
 ws.means <- ws.fp %>%
   group_by(vowel, syll_type2) %>%
   summarise(f1_norm = mean(f1_norm),
             f2_norm = mean(f2_norm),
             duration = mean(duration),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50))
+            F1 = mean(F1),
+            F2 = mean(F2))
 
 # dist <- function(x, y) {
 #   sqrt((x-lead(x))^2+(y-lead(y))^2)}
@@ -229,7 +219,7 @@ ggplot(data=ws.fp.2, aes(x=f2_norm, y=f1_norm, label=vowel)) +
   scale_y_reverse(position = "right")
 
 # plot with one dot per subject per vowel - non-normalized data
-ggplot(data=ws.fp.2, aes(x=f2_50, y=f1_50, label=vowel)) +
+ggplot(data=ws.fp.2, aes(x=F2, y=F1, label=vowel)) +
   geom_point(alpha=0.25, aes(color=vowel), size=10, show.legend=FALSE) + 
   geom_text(data=ws.means, size=10, show.legend=FALSE) +
   #facet_wrap(~syll_type2) + 
@@ -246,7 +236,7 @@ ggplot(data=ws.fp.2, aes(x=f2_50, y=f1_50, label=vowel)) +
 
 # only target vowels
 # plot with one dot per subject per vowel - non-normalized data
-ggplot(data=ws.fp.2[ws.fp.2$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], aes(x=f2_50, y=f1_50, label=vowel)) +
+ggplot(data=ws.fp.2[ws.fp.2$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], aes(x=F2, y=F1, label=vowel)) +
   geom_point(alpha=0.25, aes(color=vowel), size=10, show.legend=FALSE) + 
   geom_text(data=ws.means[ws.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], size=10, show.legend=FALSE) +
   #facet_wrap(~syll_type2) + 
@@ -275,16 +265,16 @@ we.fp.2 <- we.fp %>%
   summarize(f1_norm = mean(f1_norm),
             f2_norm = mean(f2_norm),
             duration = mean(duration),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50))
+            F1 = mean(F1),
+            F2 = mean(F2))
 
 we.means <- we.fp %>%
   group_by(vowel, syll_type2) %>%
   summarise(f1_norm = mean(f1_norm),
             f2_norm = mean(f2_norm),
             duration = mean(duration),
-            f1_50 = mean(f1_50),
-            f2_50 = mean(f2_50))
+            F1 = mean(F1),
+            F2 = mean(F2))
 
 #dist <- function(x, y) {
 #  sqrt((x-lead(x))^2+(y-lead(y))^2)}
@@ -330,7 +320,7 @@ ggplot(data=we.fp.2, aes(x=f2_norm, y=f1_norm, label=vowel)) +
   scale_y_reverse(position = "right")
 
 # plot with one dot per subject per vowel - non-normalized data
-ggplot(data=we.fp.2, aes(x=f2_50, y=f1_50, label=vowel)) +
+ggplot(data=we.fp.2, aes(x=F2, y=F1, label=vowel)) +
   geom_point(alpha=0.25, aes(color=vowel), size=10, show.legend=FALSE) + 
   geom_text(data=we.means, size=10, show.legend=FALSE) +
   #facet_wrap(~syll_type2) + 
@@ -347,7 +337,7 @@ ggplot(data=we.fp.2, aes(x=f2_50, y=f1_50, label=vowel)) +
 
 # only target vowels
 # plot with one dot per subject per vowel - non-normalized data
-ggplot(data=we.fp.2[we.fp.2$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], aes(x=f2_50, y=f1_50, label=vowel)) +
+ggplot(data=we.fp.2[we.fp.2$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], aes(x=F2, y=F1, label=vowel)) +
   geom_point(alpha=0.25, aes(color=vowel), size=10, show.legend=FALSE) + 
   geom_text(data=we.means[we.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),], size=10, show.legend=FALSE) +
   #facet_wrap(~syll_type2) + 
@@ -378,16 +368,16 @@ ggplot(data=we.fp[!is.na(we.fp$syll_type2) & we.fp$vowel %in% c("i:", "ɨ:", "e:
 
 
 ##### calculate distances #####
-points <- rbind(data.frame(group=rep("MD"), md.means[md.means$group=="NW" & md.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "f1_50", "f2_50")]),
-                data.frame(group=rep("WE"),  we.means[we.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "f1_50", "f2_50")]),
-                data.frame(group=rep("WS"), ws.means[ws.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "f1_50", "f2_50")]))
+points <- rbind(data.frame(group=rep("MD"), md.means[md.means$group=="NW" & md.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "F1", "F2")]),
+                data.frame(group=rep("WE"),  we.means[we.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "F1", "F2")]),
+                data.frame(group=rep("WS"), ws.means[ws.means$vowel %in% c("i:", "ɨ:", "e:", "i", "ɨ", "e"),c("vowel", "F1", "F2")]))
 
 points$comp <- paste(points$group, points$vowel, sep="_")
 
 points1 <- points
 points2 <- points
 
-cr.dist <- crossdist(points1$f1_50, points1$f2_50, points2$f1_50, points2$f2_50)
+cr.dist <- crossdist(points1$F1, points1$F2, points2$F1, points2$F2)
 rownames(cr.dist) <- points$comp
 colnames(cr.dist) <- points$comp
 
