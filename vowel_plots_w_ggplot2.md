@@ -60,14 +60,13 @@ column:
 summary(data$vowel)
 ```
 
-    ## <U+0259>        a        e        i        o        u 
-    ##       84       83       82       84       81       86
+    ##  a  e  ə  i  o  u 
+    ## 83 82 84 84 81 86
 
 ## Creating Plots
 
 Assuming we want to plot a F1 \~ F2 vowel space, we first need to tell
-`ggplot2` what data to look
-at
+`ggplot2` what data to look at
 
 ``` r
 ggplot(data=data)
@@ -75,8 +74,7 @@ ggplot(data=data)
 
 ![](vowel_plots_w_ggplot2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-We also need to tell it what variables it should pay attention
-to:
+We also need to tell it what variables it should pay attention to:
 
 ``` r
 ggplot(data=data, aes(x=F2, y=F1, label=vowel))
@@ -282,8 +280,7 @@ ggplot(data=data, aes(x=F2, y=F1,color=vowel)) +
 ![](vowel_plots_w_ggplot2_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 To hide a legend that you don’t want, try adding `show.legend=FALSE` to
-the `geom_`
-call.
+the `geom_` call.
 
 ``` r
 ggplot(data=data, aes(x=vowel, y=duration)) + geom_boxplot(aes(color=v_length))
