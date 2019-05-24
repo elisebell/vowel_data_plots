@@ -29,3 +29,4 @@ head(data)
 
 # Use summary() to get a summary of the entire dataframe, or a single column
 summary(data$vowel)
+
